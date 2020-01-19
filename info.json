@@ -1,0 +1,10 @@
+{
+  "name": "sf13",
+  "version": "0.0.1",
+  "factorio_version": "0.18",
+  "title": "Space Factory 13",
+  "author": "abregado",
+  "description": "Round back factory fun",
+  "homepage": " ",
+  "dependencies": ["base"]
+}
