@@ -1,19 +1,5 @@
 require("util")
 
-local table_sheet_sprite = function(x)
-  return
-  {
-    filename = "__sf13__/graphics/entity/table.png",
-    priority = "extra-high",
-    width = 32,
-    height = 64,
-    variation_count = 1,
-    line_length = 10,
-    x = x*32,
-    shift = {0,0.5}
-  }
-end
-
 local wall_sheet_sprite = function(x,y)
   return
   {
@@ -95,25 +81,42 @@ local new_basic_entity = function (name)
   }
 end
 
-local table = util.table.deepcopy(data.raw["container"]["wooden-chest"])
-table.name = 'table'
-table.flags = {"player-creation"}
-table.icon = "__sf13__/graphics/icons/table.png"
-table.icon_size = 32
-table.inventory_size = 2
-table.minable = nil
-table.collision_box = {{-0.49, -0.49}, {0.49, 0.49}}
-table.selection_box = {{-0.5, -0.75}, {0.5, 0.25}}
-table.picture = {
-  filename = '__sf13__/graphics/entity/table.png',
-  width = 32,
-  height = 64
-}
-table.pictures = nil
-
-
 local station_wall = new_basic_entity('station-wall')
 station_wall.pictures = generate_all_variations()
 
-data:extend({station_wall,table})
+local green_door = util.table.deepcopy(data.raw["gate"]["gate"])
+green_door.name = 'green_door'
+green_door.icon = "__sf13__/graphics/icons/green-door.png"
+green_door.flags = {"player-creation"}
+green_door.minable = nil
+green_door.icon_size = 32
+green_door.opening_speed = 0.0366666
+green_door.activation_distance = 0.5
+green_door.timeout_to_close = 1
+green_door.fadeout_interval = 15
+green_door.vertical_animation = {
+  layers = {
+    {
+      filename = "__sf13__/graphics/entity/green-door.png",
+      line_length = 6,
+      width = 32,
+      height = 32,
+      frame_count = 6,
+    }
+  }
+}
+green_door.horizontal_animation = {
+  layers = {
+    {
+      filename = "__sf13__/graphics/entity/green-door.png",
+      line_length = 6,
+      width = 32,
+      height = 32,
+      frame_count = 6,
+    }
+  }
+}
+
+
+data:extend({station_wall,green_door})
 

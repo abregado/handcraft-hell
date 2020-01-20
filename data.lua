@@ -2,33 +2,10 @@ require("util")
 require('tiles')
 require('walls')
 require('character')
-local hit_effects = require ("__base__.prototypes.entity.demo-hit-effects")
+require('machines')
+require('crafting_categories')
 
-generic_impact_sound = function()
-  return
-  {
-    {
-      filename = "__base__/sound/car-metal-impact.ogg", volume = 0.5
-    },
-    {
-      filename = "__base__/sound/car-metal-impact-2.ogg", volume = 0.5
-    },
-    {
-      filename = "__base__/sound/car-metal-impact-3.ogg", volume = 0.5
-    },
-    {
-      filename = "__base__/sound/car-metal-impact-4.ogg", volume = 0.5
-    },
-    {
-      filename = "__base__/sound/car-metal-impact-5.ogg", volume = 0.5
-    },
-    {
-      filename = "__base__/sound/car-metal-impact-6.ogg", volume = 0.5
-    }
-  }
-end
-
-local new_basic_item = function(item_name)
+local new_basic_item = function(item_name,stack_size)
   return  {
     type = "item",
     name = item_name,
@@ -36,21 +13,16 @@ local new_basic_item = function(item_name)
     icon_size = 32, icon_mipmaps = 4,
     subgroup = "intermediate-product",
     order = "e["..item_name.."]",
-    stack_size = 1
+    stack_size = stack_size or 5
   }
 end
 
-local set_up_crafting_category = function(item_list,recipe_category,fail_result)
-  --create failed-result-item
-  data:extend({new_basic_item(fail_result)})
-  --create crafting category
-  data:extend({
-    {
-      type = "recipe-category",
-      name = recipe_category
-    },
-  })
+local knife = new_basic_item('kitchen-knife',1)
+local rolling_pin = new_basic_item('rolling-pin',1)
 
+data:extend({knife,rolling_pin})
+
+local create_recipes = function(item_list,recipe_category,fail_result)
   --create recipes
   for _, item in pairs(item_list) do
     local new_recipe = {
@@ -64,77 +36,102 @@ local set_up_crafting_category = function(item_list,recipe_category,fail_result)
       --localised_name = {"string"},
       enabled = true
     }
-    data:extend({new_recipe})
+    if type(new_recipe.result) == 'table' then
+      new_recipe.result_count = new_recipe.result[2]
+      new_recipe.result = new_recipe.result[1]
+    end
+    if new_recipe.result then
+      data:extend({new_recipe})
+    end
   end
 end
 
 local items = {
   {
-    name ='raw-cutlet',
-    heating ='cutlet'
+    name = 'wheat',
+    stack_size = 10,
+    grinding = 'flour'
   },
   {
-    name = 'cutlet',
+    name = 'flour',
+    stack_size = 5,
+    wetting = 'dough'
   },
   {
-    name = 'spaghetti',
-    heating = 'boiled-pasta'
+    name = 'tomato',
+    stack_size = 5,
+    grinding = 'tomato-sauce'
   },
   {
-    name = 'boiled-pasta',
+    name = 'tomato-sauce',
+    stack_size = 5,
+  },
+  {
+    name = 'milk',
+    stack_size = 1,
+    processing = 'cheese'
+  },
+  {
+    name = 'cheese',
+    stack_size = 1,
+    cutting = {'cheese-wedge',8},
+    processing = {'grated-cheese',8},
+  },
+  {
+    name = 'cheese-wedge',
+    stack_size = 4,
+    processing = 'grated-cheese'
+  },
+  {
+    name = 'grated-cheese',
+    stack_size = 2,
+  },
+  {
+    name = 'dough',
+    stack_size = 1,
+    rolling = 'pizza-dough'
   },
   {
     name = 'pizza-dough',
+    stack_size = 1,
     heating = 'pizza-bread'
   },
   {
     name = 'pizza-bread',
+    stack_size = 1,
   },
 }
 
 for _, item in pairs(items) do
-  data:extend({new_basic_item(item.name)})
+  data:extend({new_basic_item(item.name,item.stack_size)})
 end
 
-set_up_crafting_category(items,'heating','burnt-mess')
+create_recipes(items,'heating','burnt-mess')
+create_recipes(items,'grinding')
+create_recipes(items,'processing')
+create_recipes(items,'wetting')
+create_recipes(items,'cutting')
+create_recipes(items,'rolling')
 
-local microwave = util.table.deepcopy(data.raw["furnace"]["electric-furnace"])
-microwave.name = 'microwave'
-microwave.icon = "__sf13__/graphics/icons/microwave.png"
-microwave.icon_size = 32
-microwave.flags = {"player-creation"}
-microwave.minable = nil
-microwave.collision_box = {{-0.49, -0.49}, {0.49, 0.49}}
-microwave.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
-microwave.crafting_categories = {"heating"}
-microwave.animation = {
-  layers =
-  {
-    {
-      filename = "__sf13__/graphics/entity/microwave.png",
-      priority = "high",
-      width = 32,
-      height = 32,
-      frame_count = 1,
-      shift = {0, 0},
-    },
-  }
-}
-microwave.working_visualisations = {
-  {
-    animation =
-    {
-      filename = "__sf13__/graphics/entity/microwave.png",
-      priority = "high",
-      width = 32,
-      height = 32,
-      frame_count = 1,
-      x = 64,
-      shift = {0, 0},
-    },
-    light = {intensity = 0.4, size = 6, shift = {0.0, 1.0}, color = {r = 1.0, g = 1.0, b = 1.0}}
-  }
-}
 
-data:extend({microwave})
+
+local new_finished_product = function(name,ingredients)
+  --create item
+  data:extend({new_basic_item(name,1)})
+  --create recipes
+  local new_recipe = {
+    type = "recipe",
+    name = "crafting-"..name,
+    energy_required = 10,
+    category = "cooking",
+    ingredients = ingredients,
+    result = name,
+    --main_product = "",
+    --localised_name = {"string"},
+    enabled = true
+  }
+  data:extend({new_recipe})
+end
+
+new_finished_product('pizza-margherita',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1}})
 
