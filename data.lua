@@ -53,6 +53,39 @@ local items = {
     grinding = 'flour'
   },
   {
+    name = 'meat-slab',
+    stack_size = 1,
+    cutting = {'raw-cutlet',3}
+  },
+  {
+    name = 'raw-cutlet',
+    stack_size = 3,
+    heating = 'cutlet'
+  },
+  {
+    name = 'cutlet',
+    stack_size = 3,
+    processing = 'sausage',
+    cutting = {'prosciutto',2}
+  },
+  {
+    name = 'sausage',
+    stack_size = 3,
+  },
+  {
+    name = 'prosciutto',
+    stack_size = 10
+  },
+  {
+    name = 'pineapple',
+    stack_size = 1,
+    cutting = {'pineapple-ring',6}
+  },
+  {
+    name = 'pineapple-ring',
+    stack_size = 12,
+  },
+  {
     name = 'flour',
     stack_size = 5,
     wetting = 'dough'
@@ -134,4 +167,6 @@ local new_finished_product = function(name,ingredients)
 end
 
 new_finished_product('pizza-margherita',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1}})
+new_finished_product('pizza-hawaii',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1},{'pineapple-ring',2}})
+new_finished_product('pizza-pepperoni',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1},{'sausage',1},{'prosciutto',1}})
 
