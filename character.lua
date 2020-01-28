@@ -61,34 +61,34 @@ local unclothed_animation = function()
 end
 
 local outfits = {}
-outfits['white-jumpsuit'] = {
+outfits['jumpsuit-white'] = {
   animation = clothed_animation(0),
 }
-outfits['purple-jumpsuit'] = {
+outfits['jumpsuit-purple'] = {
   animation = clothed_animation(1),
 }
-outfits['green-jumpsuit'] = {
+outfits['jumpsuit-green'] = {
   animation = clothed_animation(2),
 }
-outfits['yellow-jumpsuit'] = {
+outfits['jumpsuit-yellow'] = {
   animation = clothed_animation(3),
 }
-outfits['blue-jumpsuit'] = {
+outfits['jumpsuit-blue'] = {
   animation = clothed_animation(4),
 }
-outfits['engineer-jumpsuit'] = {
+outfits['jumpsuit-engineer'] = {
   animation = clothed_animation(5),
 }
-outfits['cargo-jumpsuit'] = {
+outfits['jumpsuit-cargo'] = {
   animation = clothed_animation(6),
 }
-outfits['research-jumpsuit'] = {
+outfits['jumpsuit-research'] = {
   animation = clothed_animation(7),
 }
-outfits['security-jumpsuit'] = {
+outfits['jumpsuit-security'] = {
   animation = clothed_animation(8),
 }
-outfits['medical-jumpsuit'] = {
+outfits['jumpsuit-medical'] = {
   animation = clothed_animation(9),
 }
 
@@ -96,7 +96,7 @@ local character = util.table.deepcopy(data.raw["character"]["character"])
 character.animations[1].idle = {layers = unclothed_animation()}
 character.animations[1].running = {layers = unclothed_animation()}
 character.crafting_categories = {"cooking","rolling","cutting"}
-character.inventory_size = 10
+character.inventory_size = 12
 character.build_distance = 3
 character.drop_item_distance = 2
 character.reach_distance = 2

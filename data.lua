@@ -28,7 +28,7 @@ local create_recipes = function(item_list,recipe_category,fail_result)
     local new_recipe = {
       type = "recipe",
       name = recipe_category.."-"..item.name,
-      energy_required = 10,
+      energy_required = 3,
       category = recipe_category,
       ingredients = {{item.name,1}},
       result = item[recipe_category] or fail_result,
@@ -48,6 +48,38 @@ end
 
 local items = {
   {
+    name = 'glass-empty',
+    stack_size = 3,
+    wetting = 'glass-water'
+  },
+  {
+    name = 'glass-water',
+    stack_size = 1,
+    wetting = 'glass-empty',
+    heating = 'glass-empty',
+  },
+  {
+    name = 'glass-dirty',
+    stack_size = 3,
+    wetting = 'glass-empty',
+  },
+  {
+    name = 'bowl-empty',
+    stack_size = 3,
+    wetting = 'bowl-water',
+    heating = 'bowl-empty'
+  },
+  {
+    name = 'bowl-water',
+    stack_size = 1,
+    wetting = 'bowl-empty',
+    heating = 'bowl-empty'
+  },
+  {
+    name = 'bowl-empty',
+    wetting = 'bowl-water',
+  },
+  {
     name = 'wheat',
     stack_size = 10,
     grinding = 'flour'
@@ -55,10 +87,10 @@ local items = {
   {
     name = 'meat-slab',
     stack_size = 1,
-    cutting = {'raw-cutlet',3}
+    cutting = {'cutlet-raw',3}
   },
   {
-    name = 'raw-cutlet',
+    name = 'cutlet-raw',
     stack_size = 3,
     heating = 'cutlet'
   },
@@ -88,7 +120,6 @@ local items = {
   {
     name = 'flour',
     stack_size = 5,
-    wetting = 'dough'
   },
   {
     name = 'tomato',
@@ -108,24 +139,24 @@ local items = {
     name = 'cheese',
     stack_size = 1,
     cutting = {'cheese-wedge',8},
-    processing = {'grated-cheese',8},
+    processing = {'cheese-grated',8},
   },
   {
     name = 'cheese-wedge',
     stack_size = 4,
-    processing = 'grated-cheese'
+    processing = 'cheese-grated'
   },
   {
-    name = 'grated-cheese',
+    name = 'cheese-grated',
     stack_size = 2,
   },
   {
     name = 'dough',
     stack_size = 1,
-    rolling = 'pizza-dough'
+    rolling = 'dough-pizza'
   },
   {
-    name = 'pizza-dough',
+    name = 'dough-pizza',
     stack_size = 1,
     heating = 'pizza-bread'
   },
@@ -146,7 +177,21 @@ create_recipes(items,'wetting')
 create_recipes(items,'cutting')
 create_recipes(items,'rolling')
 
-
+local new_recipe_with_catalyst = function(category,ingredients,results)
+  local new_recipe = {
+    type = 'recipe',
+    name = category.."-"..ingredients[1][1],
+    icon = "__sf13__/graphics/icons/"..results[1][1]..".png",
+    icon_size = 32,
+    icon_mipmaps = 1,
+    energy_required = 5,
+    category = "cooking",
+    ingredients = ingredients,
+    results = results,
+    main_product = results[1][1],
+  }
+  data:extend({new_recipe})
+end
 
 local new_finished_product = function(name,ingredients)
   --create item
@@ -166,7 +211,9 @@ local new_finished_product = function(name,ingredients)
   data:extend({new_recipe})
 end
 
-new_finished_product('pizza-margherita',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1}})
-new_finished_product('pizza-hawaii',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1},{'pineapple-ring',2}})
-new_finished_product('pizza-pepperoni',{{'pizza-bread',1},{'grated-cheese',1},{'tomato-sauce',1},{'sausage',1},{'prosciutto',1}})
+new_recipe_with_catalyst('cooking',{{'flour',3},{'bowl-water',1}},{{'dough',1},{'bowl-empty',1}})
+
+new_finished_product('pizza-margherita',{{'pizza-bread',1},{'cheese-grated',1},{'tomato-sauce',1}})
+new_finished_product('pizza-hawaii',{{'pizza-bread',1},{'cheese-grated',1},{'tomato-sauce',1},{'pineapple-ring',2}})
+new_finished_product('pizza-pepperoni',{{'pizza-bread',1},{'cheese-grated',1},{'tomato-sauce',1},{'sausage',1},{'prosciutto',1}})
 

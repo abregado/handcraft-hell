@@ -76,6 +76,30 @@ local smart_fridge = simple_container('smart-fridge',30)
 local fridge = simple_container('fridge',10)
 local table = simple_container('table',4)
 local kitchen_vending = simple_container('kitchen-vending-machine',10)
-local black_locker = simple_container('black-locker',10)
+local black_locker = simple_container('locker-black',10)
 
-data:extend({microwave,microwave_table,food_processor,grinder_table,sink,fridge,smart_fridge,table,kitchen_vending,black_locker})
+local disposal_unit = util.table.deepcopy(data.raw["logistic-container"]["logistic-chest-storage"])
+disposal_unit.type = "infinity-container"
+disposal_unit.name = "infinity-chest"
+disposal_unit.icon = "__sf13__/graphics/icons/disposal-unit.png"
+disposal_unit.icon_size = 32
+disposal_unit.gui_mode = "admins" -- all, none, admins
+disposal_unit.erase_contents_when_mined = true
+disposal_unit.animation = nil
+disposal_unit.picture =
+{
+  layers =
+  {
+    {
+      filename = "__sf13__/graphics/entity/disposal-unit.png",
+      priority = "extra-high",
+      width = 32,
+      height = 64,
+    },
+  }
+}
+disposal_unit.logistic_mode = nil
+disposal_unit.logistic_slots_count = 12
+disposal_unit.minable = nil
+
+data:extend({microwave,microwave_table,food_processor,grinder_table,sink,fridge,smart_fridge,table,kitchen_vending,black_locker,disposal_unit})
