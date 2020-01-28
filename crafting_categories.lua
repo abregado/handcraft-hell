@@ -24,12 +24,19 @@ local set_up_crafting_category = function(recipe_category,fail_result)
   })
   --create item category
   data:extend({{
-    type = "item-group",
-    name = recipe_category,
-    order = "a",
-    icon = "__sf13__/graphics/item-group/"..recipe_category..".png",
-    icon_size = 32
-  }})
+      type = "item-group",
+      name = recipe_category,
+      order = "a",
+      icon = "__sf13__/graphics/item-group/"..recipe_category..".png",
+      icon_size = 32
+    },
+    {
+      type = "item-subgroup",
+      name = recipe_category.."-main",
+      group = recipe_category,
+      order = "a",
+    }
+  })
 end
 
 set_up_crafting_category('heating','burnt-mess')
